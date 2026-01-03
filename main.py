@@ -10,7 +10,12 @@ OFFSET = 0
 headers = {
     'Authorization': f'Bearer {ACCESS_TOKEN}'
 }
-con = datastore.create_db()
+response = requests.get(BASE_URL + 'me', headers=headers)
+user_key = "default_user"
+if response.status_code == 200:
+    data = response.json()
+    user_key = data['display_name'] + '___' + data['id']
+con = datastore.create_db(user_key)
 datastore.create_tables(con)
 while True:
     response = requests.get(BASE_URL + 'me/tracks?limit=' + str(LIMIT) + '&offset=' + str(OFFSET), headers=headers)
