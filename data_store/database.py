@@ -3,7 +3,8 @@ import os
 from datetime import datetime
 def create_db(user_key):
   DB_NAME = datetime.today().strftime('__data_store_%y%m%d%H%M%S%f') + ".db"
-  folder_path = os.path.join(os.getcwd(), "data_output/" + user_key)
+  DATA_FOLDER = os.getenv('SHIFT_LIST_DATA_FOLDER', 'shift_list_data')
+  folder_path = os.path.join(os.getcwd(), DATA_FOLDER + "/" + user_key)
   os.makedirs(folder_path, exist_ok=True)
   con = sqlite3.connect(os.path.join(folder_path, DB_NAME))
   return con
