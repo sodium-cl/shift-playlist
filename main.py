@@ -15,7 +15,8 @@ user_key = "default_user"
 if response.status_code == 200:
     data = response.json()
     user_key = data['display_name'] + '___' + data['id']
-con = datastore.create_db(user_key)
+data_path = datastore.create_data_folder()
+con = datastore.create_db(data_path, user_key)
 datastore.create_tables(con)
 while True:
     response = requests.get(BASE_URL + 'me/tracks?limit=' + str(LIMIT) + '&offset=' + str(OFFSET), headers=headers)
@@ -51,4 +52,5 @@ while True:
         break
     if not data['next']:
         break
+datastore.create_csv(con, data_path)
 datastore.close_db(con)
