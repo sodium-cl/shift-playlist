@@ -14,7 +14,6 @@ con = datastore.create_db()
 datastore.create_tables(con)
 while True:
     response = requests.get(BASE_URL + 'me/tracks?limit=' + str(LIMIT) + '&offset=' + str(OFFSET), headers=headers)
-    print(f"Status Code: {response.status_code}")
     if response.status_code == 200:
         data = response.json()
         OFFSET += LIMIT
@@ -33,15 +32,18 @@ while True:
             datastore.insert_album(con, album_data)
             track_data = (
                 track['id'],
+                album['id'],
                 ', '.join(artist['name'] for artist in track['artists']),
                 track['name'],
                 track['duration_ms'],
                 track['external_ids'].get('isrc'),
                 track['external_ids'].get('ean'),
                 track['external_ids'].get('upc'),
-                album['id']
             )
             datastore.insert_track(con, track_data)
+    if response.status_code == 401:
+        print("Access token expired or invalid. Please refresh the token.")
+        break
     if not data['next']:
         break
 datastore.close_db(con)
