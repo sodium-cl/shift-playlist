@@ -60,9 +60,7 @@ def create_csv(con,data_path):
               release_date,
               isrc_id,
               ean_id, 
-              upc_id, 
-              FROM album, tracks
-              WHERE tracks.service_album_id = album.service_album_id
+              upc_id FROM album, tracks WHERE tracks.service_album_id = album.service_album_id
               """)
   rows = cur.fetchall()
   csv_dir = os.path.join(data_path, "csv_exports")
